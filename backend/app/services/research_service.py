@@ -1,9 +1,15 @@
-def generate_research(query: str) -> str:
-    """
-    Generates a research response.
+from sqlalchemy.orm import Session
 
-    This is currently a placeholder.
-    Later this will call an AI model.
-    """
+from backend.app.repositories.research_repository import create_research
 
-    return f"Research generated for: {query}"
+
+def generate_research(query: str, db: Session) -> str:
+    answer = f"Research generated for: {query}"
+
+    create_research(
+        db=db,
+        query=query,
+        answer=answer,
+    )
+
+    return answer
