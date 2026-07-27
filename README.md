@@ -1,1 +1,3 @@
 # AI-Research-Assistant
+
+AI Research Assistant is a full-stack web application that helps users discover, organize, and understand research papers and technical resources using AI. The platform integrates academic databases, GitHub repositories, and large language models to provide intelligent search, paper summaries, concept explanations, study collections, and personalized learning tools. This project is being built to explore modern full-stack development, API integration, cloud deployment, and AI engineering practices using React, TypeScript, FastAPI, MongoDB, and Docker.
