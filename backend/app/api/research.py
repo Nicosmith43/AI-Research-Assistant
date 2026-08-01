@@ -6,7 +6,7 @@ from backend.app.models.research import (
     ResearchRequest,
     ResearchResponse,
 )
-from backend.app.services.research_service import generate_research
+from backend.app.services.research_service import research_service
 
 router = APIRouter()
 
@@ -15,11 +15,13 @@ router = APIRouter()
 def research(
     request: ResearchRequest,
     db: Session = Depends(get_db),
-    ):
-
-    answer = generate_research(request.query, db)
+):
+    research = research_service.generate_research(
+        query=request.query,
+        db=db,
+    )
 
     return ResearchResponse(
-        query=request.query,
-        answer=answer
+        query=research.query,
+        answer=research.answer,
     )

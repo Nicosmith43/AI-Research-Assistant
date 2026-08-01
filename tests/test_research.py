@@ -29,3 +29,13 @@ def test_health_endpoint():
     data = response.json()
 
     assert data["status"] == "healthy"
+
+def test_get_history():
+    response = client.get("/history")
+
+    assert response.status_code == 200
+
+def test_invalid_history():
+    response = client.get("/history/99999")
+
+    assert response.status_code == 404

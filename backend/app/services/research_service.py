@@ -1,15 +1,29 @@
 from sqlalchemy.orm import Session
 
-from backend.app.repositories.research_repository import create_research
+from backend.app.repositories.research_repository import (
+    create_research,
+)
 
 
-def generate_research(query: str, db: Session) -> str:
-    answer = f"Research generated for: {query}"
+class ResearchService:
+    """
+    Handles all research generation logic.
+    """
 
-    create_research(
-        db=db,
-        query=query,
-        answer=answer,
-    )
+    def generate_research(
+        self,
+        query: str,
+        db: Session,
+    ):
+        answer = f"Research generated for: {query}"
 
-    return answer
+        research = create_research(
+            db=db,
+            query=query,
+            answer=answer,
+        )
+
+        return research
+
+
+research_service = ResearchService()
