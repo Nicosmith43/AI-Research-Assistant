@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 
-from backend.app.services.wikipedia_service import wikipedia_service
+from backend.app.providers.research_provider import research_provider
 from backend.app.repositories.research_repository import (
     create_research,
 )
@@ -16,7 +16,7 @@ class ResearchService:
         query: str,
         db: Session,
     ):
-        answer = wikipedia_service.get_summary(query)
+        answer = research_provider.generate(query)
 
         research = create_research(
             db=db,

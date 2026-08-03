@@ -19,7 +19,7 @@ def test_research_endpoint():
     data = response.json()
 
     assert data["query"] == "What is artificial intelligence?"
-    assert "Research generated for" in data["answer"]
+    assert len(data["answer"]) > 0
 
 def test_health_endpoint():
     response = client.get("/health")
