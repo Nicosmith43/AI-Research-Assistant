@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 
-from backend.app.services.openai_service import openai_service
+from backend.app.providers.openai_provider import openai_provider
 from backend.app.providers.wikipedia_provider import wikipedia_provider
 from backend.app.providers.arxiv_provider import arxiv_provider
 from backend.app.repositories.research_repository import create_research
@@ -38,7 +38,7 @@ class ResearchService:
 
         # Ask OpenAI to improve the research using both sources
         try:
-            answer = openai_service.improve_research(
+            answer = openai_provider.improve_research(
                 query=query,
                 wikipedia_summary=wiki_summary,
                 arxiv_summary=arxiv_summary,
