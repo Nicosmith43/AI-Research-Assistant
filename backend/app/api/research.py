@@ -16,12 +16,16 @@ def research(
     request: ResearchRequest,
     db: Session = Depends(get_db),
 ):
-    research = research_service.generate_research(
+    result = research_service.generate_research(
         query=request.query,
         db=db,
     )
 
+    research = result["research"]
+    sources = result["sources"]
+
     return ResearchResponse(
         query=research.query,
         answer=research.answer,
+        sources=sources,
     )

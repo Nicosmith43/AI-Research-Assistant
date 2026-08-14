@@ -5,6 +5,13 @@ class ResearchRequest(BaseModel):
     query: str
 
 
+class ResearchSource(BaseModel):
+    type: str
+    title: str
+    url: str
+
+
 class ResearchResponse(BaseModel):
     query: str
     answer: str
+    sources: list[ResearchSource]

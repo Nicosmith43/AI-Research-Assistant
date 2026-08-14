@@ -1,8 +1,8 @@
 from sqlalchemy.orm import Session
 
-from backend.app.providers.openai_provider import openai_provider
-from backend.app.providers.wikipedia_provider import wikipedia_provider
 from backend.app.providers.arxiv_provider import arxiv_provider
+from backend.app.providers.wikipedia_provider import wikipedia_provider
+from backend.app.providers.openai_provider import openai_provider
 from backend.app.repositories.research_repository import create_research
 
 
@@ -25,6 +25,27 @@ class ResearchService:
             max_results=5,
         )
 
+        # Build a list of sources for the API response
+        sources = []
+
+        if wiki_summary:
+            sources.append(
+                {
+                    "type": "wikipedia",
+                    "title": query,
+                    "url": f"https://en.wikipedia.org/wiki/{query.replace(' ', '_')}",
+                }
+            )
+
+        for paper in arxiv_results:
+            sources.append(
+                {
+                    "type": "arxiv",
+                    "title": paper["title"],
+                    "url": paper["url"],
+                }
+            )
+
         # Prepare arXiv information for the AI
         arxiv_summary = "\n\n".join(
             [
@@ -36,7 +57,7 @@ class ResearchService:
             ]
         )
 
-        # Ask OpenAI to improve the research using both sources
+        # Ask OpenAI to improve the research
         try:
             answer = openai_provider.improve_research(
                 query=query,
@@ -52,9 +73,13 @@ class ResearchService:
             db=db,
             query=query,
             answer=answer,
+            source="Wikipedia + arXiv",
         )
 
-        return research
+        return {
+            "research": research,
+            "sources": sources,
+        }
 
 
 research_service = ResearchService()
