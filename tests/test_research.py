@@ -21,6 +21,14 @@ def test_research_endpoint():
     assert data["query"] == "What is artificial intelligence?"
     assert len(data["answer"]) > 0
 
+    assert "sources" in data
+    assert len(data["sources"]) > 0
+
+    for source in data["sources"]:
+        assert "type" in source
+        assert "title" in source
+        assert "url" in source
+
 def test_health_endpoint():
     response = client.get("/health")
 
