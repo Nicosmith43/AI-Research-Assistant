@@ -6,6 +6,8 @@ from backend.app.models.history import HistoryResponse
 from backend.app.repositories.research_repository import (
     get_all_research,
     get_research_by_id,
+    delete_research,
+    toggle_favorite,
 )
 
 router = APIRouter()
@@ -45,3 +47,44 @@ def get_history_item(
         )
 
     return research
+
+
+@router.delete("/history/{research_id}")
+def delete_history(
+    research_id: int,
+    db: Session = Depends(get_db),
+):
+    research = get_research_by_id(db, research_id)
+
+    if research is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Research not found",
+        )
+
+    delete_research(db, research)
+
+    return {
+        "message": "Research deleted successfully"
+    }
+
+
+@router.post("/history/{research_id}/favorite")
+def favorite_history(
+    research_id: int,
+    db: Session = Depends(get_db),
+):
+    research = get_research_by_id(db, research_id)
+
+    if research is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Research not found",
+        )
+
+    research = toggle_favorite(db, research)
+
+    return {
+        "id": research.id,
+        "favorite": research.favorite,
+    }
