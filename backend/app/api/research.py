@@ -25,6 +25,7 @@ def research(
     sources = result["sources"]
 
     return ResearchResponse(
+        id=research.id,
         query=research.query,
         answer=research.answer,
         sources=sources,

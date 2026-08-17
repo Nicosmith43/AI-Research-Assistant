@@ -12,6 +12,7 @@ class ResearchSource(BaseModel):
 
 
 class ResearchResponse(BaseModel):
+    id: int
     query: str
     answer: str
     sources: list[ResearchSource]
