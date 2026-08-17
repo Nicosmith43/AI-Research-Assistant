@@ -134,3 +134,13 @@ def test_delete_history():
     )
 
     assert response.status_code == 404
+
+def test_empty_research_query():
+    response = client.post(
+        "/research",
+        json={
+            "query": ""
+        }
+    )
+
+    assert response.status_code == 422
