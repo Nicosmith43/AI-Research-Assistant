@@ -9,11 +9,12 @@ class OpenAIService:
         self.client = OpenAI(
             api_key=settings.OPENAI_API_KEY
         )
-    
+
     def improve_research(
         self,
         query: str,
         wikipedia_summary: str,
+        arxiv_summary: str,
     ) -> str:
 
         response = self.client.chat.completions.create(
@@ -22,21 +23,31 @@ class OpenAIService:
                 {
                     "role": "system",
                     "content": (
-                        "You are a professional research assistant."
+                        "You are a professional research assistant. "
+                        "Use the provided sources to create an accurate, "
+                        "concise explanation suitable for a college student."
                     ),
                 },
                 {
                     "role": "user",
                     "content": (
                         f"Research Topic: {query}\n\n"
+
                         f"Wikipedia Summary:\n"
                         f"{wikipedia_summary}\n\n"
-                        "Create a concise explanation suitable for a college student."
+
+                        f"Relevant arXiv Papers:\n"
+                        f"{arxiv_summary}\n\n"
+
+                        "Create a concise explanation of the topic. "
+                        "Use the sources above to provide context and "
+                        "mention relevant academic research when appropriate."
                     ),
                 },
             ],
         )
 
         return response.choices[0].message.content
+
 
 openai_service = OpenAIService()
