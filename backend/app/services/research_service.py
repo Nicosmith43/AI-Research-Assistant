@@ -17,7 +17,8 @@ class ResearchService:
         db: Session,
     ):
         # Get information from Wikipedia
-        wiki_summary = wikipedia_provider.get_summary(query)
+        wiki_result = wikipedia_provider.get_summary(query)
+        wiki_summary = wiki_result["extract"] if wiki_result else None
 
         # Get relevant academic papers from arXiv
         arxiv_results = arxiv_provider.search(
@@ -28,15 +29,12 @@ class ResearchService:
         # Build a list of sources for the API response
         sources = []
 
-        if wiki_summary:
+        if wiki_result:
             sources.append(
                 {
                     "type": "wikipedia",
-                    "title": query,
-                    "url": (
-                        "https://en.wikipedia.org/wiki/"
-                        + query.replace(" ", "_")
-                    ),
+                    "title": wiki_result["title"],
+                    "url": wiki_result["url"],
                 }
             )
 
@@ -64,23 +62,12 @@ class ResearchService:
         try:
             answer = openai_provider.improve_research(
                 query=query,
-                wikipedia_summary=wiki_summary,
+                wikipedia_summary=wiki_summary or "No Wikipedia article found.",
                 arxiv_summary=arxiv_summary,
             )
         except Exception as e:
             print(f"Error improving research: {e}")
-
-            if wiki_summary:
-                answer = (
-                    "AI synthesis was unavailable. "
-                    "Here is the available Wikipedia information:\n\n"
-                    + wiki_summary
-                )
-            else:
-                answer = (
-                    "Unable to generate research because the AI service "
-                    "and Wikipedia source were unavailable."
-                )
+            answer = wiki_summary or "Unable to generate research for this query."
 
         # Save the final answer
         research = create_research(
