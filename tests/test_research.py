@@ -91,49 +91,6 @@ def test_delete_history():
 
     assert response.status_code == 404
 
-def test_toggle_favorite():
-    response = client.post(
-        "/research",
-        json={
-            "query": "Test favorite research"
-        }
-    )
-
-    assert response.status_code == 200
-
-    research_id = response.json()["id"]
-
-    response = client.post(
-        f"/history/{research_id}/favorite"
-    )
-
-    assert response.status_code == 200
-    assert response.json()["favorite"] is True
-
-
-def test_delete_history():
-    response = client.post(
-        "/research",
-        json={
-            "query": "Test delete research"
-        }
-    )
-
-    assert response.status_code == 200
-
-    research_id = response.json()["id"]
-
-    response = client.delete(
-        f"/history/{research_id}"
-    )
-
-    assert response.status_code == 200
-
-    response = client.get(
-        f"/history/{research_id}"
-    )
-
-    assert response.status_code == 404
 
 def test_empty_research_query():
     response = client.post(

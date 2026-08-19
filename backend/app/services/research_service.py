@@ -33,7 +33,10 @@ class ResearchService:
                 {
                     "type": "wikipedia",
                     "title": query,
-                    "url": f"https://en.wikipedia.org/wiki/{query.replace(' ', '_')}",
+                    "url": (
+                        "https://en.wikipedia.org/wiki/"
+                        + query.replace(" ", "_")
+                    ),
                 }
             )
 
@@ -66,7 +69,18 @@ class ResearchService:
             )
         except Exception as e:
             print(f"Error improving research: {e}")
-            answer = wiki_summary
+
+            if wiki_summary:
+                answer = (
+                    "AI synthesis was unavailable. "
+                    "Here is the available Wikipedia information:\n\n"
+                    + wiki_summary
+                )
+            else:
+                answer = (
+                    "Unable to generate research because the AI service "
+                    "and Wikipedia source were unavailable."
+                )
 
         # Save the final answer
         research = create_research(
